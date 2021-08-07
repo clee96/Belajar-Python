@@ -2,13 +2,18 @@ import pandas as pd
 from numbers import Number
 import json
 import os
-# digunakan agar schema warna dapat di tampilkan di comand promp windows 10
+# digunakan agar schema warna dapat di tampilkan di terminal
 os.system("")
 # load json file yang berisi factor reagent
-with open("D:/Git Repositori/Belajar-Python/reagent factor.json") as f:
-    factor = json.load(f)
+def load_data():
+    with open("/Users/user/Python/Belajar-Python/reagent factor.json") as f:
+        factor = json.load(f)
+    return factor
+def save_data():
+    with open('reagent factor.json', 'w') as f:
+        f.write(table_factor.to_json(orient='records'))
 # merubah jason file yang berisi factor reagent ke dalam data frame
-table_factor = pd.DataFrame(factor)
+table_factor = pd.DataFrame(load_data())
 # scema warna yang di gunakan untuk di tampilkan di comand promp
 class bcolors:
     HEADER = '\033[95m'
@@ -19,16 +24,16 @@ class bcolors:
     ENDC = '\033[0m'
     BOLD = '\033[1m'
     UNDERLINE = '\033[4m'
-# variable untuk menyimpan hasil analisa
+# Dictionary untuk menyimpan hasil perhitungan analisa
 hasil_pengecekan = {}
-# variable untuk menyimpan
+# variable untuk menyimpan hasil perhitungan
 keys_alkaline = 0
 keys_acid = 0
 keys_chromating = 0
 keys_nickle_plating = 0
 keys_tin_plating = 0
 keys_cyanid_zinc = 0
-# kelas untuk menampilkan hasil perhitungan dan menambahkan hasil analisa pada dictionary hasil_pengecekan
+# kelas untuk melakukakan perhitungan dan menambahkan hasil analisa pada dictionary hasil_pengecekan
 class Rumus:
     def __init__(self, hasil_pertama=0.0, hasil_kedua=0.0, hasil_ketiga=0.0, hasil_keempat=0.0):
         self.hasil_pertama = hasil_pertama
@@ -121,34 +126,37 @@ class Rumus:
         ds_13b = ds_13a / 4
         print(bcolors.OKGREEN + '\nPn 36 = {:.2f} g/l \nDasshi 39 = {:.2f} g/l \nDs 13 A = {:.2f} g/l \nDs 13 B = {:.2f} g/l '.format(
             pn_36, dasshi_39, ds_13a, ds_13b) + bcolors.ENDC)
-
-print(bcolors.FAIL + '''
-___  ___     _     _____          _        ______         _                   
-|  \/  |    | |   |_   _|        | |       | ___ \       | |                  
-| .  . | ___| |_    | | _ __   __| | ___   | |_/ /__ _ __| | ____ _ ___  __ _ 
-| |\/| |/ _ \ __|   | || '_ \ / _` |/ _ \  |  __/ _ \ '__| |/ / _` / __|/ _` |
-| |  | |  __/ |_   _| || | | | (_| | (_) | | | |  __/ |  |   < (_| \__ \ (_| |
-\_|  |_/\___|\__|  \___/_| |_|\__,_|\___/  \_|  \___|_|  |_|\_\__,_|___/\__,_|
-''' + bcolors.ENDC)
-print('****   Perhitungan PT. Metindo Perkasa   ****')
-print('code  Nama')
-print('''1.    Perhitungan Alkaline Zinc         11.     
-2.    Perhitungan Acid Zinc             12.     
-3.    Perhitungan Chromating            13.
-4.    Perhitungan Nickle Plating        14.     
-5.    Perhitungan Tin Plating           15.     
-6.    Perhitungan Cyanid Zinc           16.     Perhitungan Degreasing
-7.                                      17.     Print Hasil Pengecekan
-8.                                      18.     Print Factor Reagent
-9.                                      19.     Rubah Factor Reagent
-10.                                     20.     Exit
-''')
-print('Masukan Kode perhitungan.....')
-
+# Tampilan Menu utama
+def menu():
+    print(bcolors.FAIL + '''
+    ___  ___     _     _____          _        ______         _                   
+    |  \/  |    | |   |_   _|        | |       | ___ \       | |                  
+    | .  . | ___| |_    | | _ __   __| | ___   | |_/ /__ _ __| | ____ _ ___  __ _ 
+    | |\/| |/ _ \ __|   | || '_ \ / _` |/ _ \  |  __/ _ \ '__| |/ / _` / __|/ _` |
+    | |  | |  __/ |_   _| || | | | (_| | (_) | | | |  __/ |  |   < (_| \__ \ (_| |
+    \_|  |_/\___|\__|  \___/_| |_|\__,_|\___/  \_|  \___|_|  |_|\_\__,_|___/\__,_|
+    ''' + bcolors.ENDC)
+    print('''
+    ***   Perhitungan PT. Metindo Perkasa   ***''')
+    print('''
+    code  Nama''')
+    print('''
+    1.    Perhitungan Alkaline Zinc         11.     
+    2.    Perhitungan Acid Zinc             12.     
+    3.    Perhitungan Chromating            13.
+    4.    Perhitungan Nickle Plating        14.     
+    5.    Perhitungan Tin Plating           15.     
+    6.    Perhitungan Cyanid Zinc           16.     Perhitungan Degreasing
+    7.                                      17.     Print Hasil Pengecekan
+    8.                                      18.     Print Factor Reagent
+    9.                                      19.     Rubah Factor Reagent
+    10.                                     20.     Exit
+    ''')
+# fungsi untuk melakukan perhitungan yang sudah di tentukan di class"Rumus" dan menampiilkan hasilnya ke
 def hasil_perhitungan(codex):
     global hasil_pengecekan
-    hasil_pengecekan_sort = dict(sorted(hasil_pengecekan.items(), key=lambda kv: kv[0]))
     global code
+    hasil_pengecekan_sort = dict(sorted(hasil_pengecekan.items(), key=lambda kv: kv[0]))
     if codex == 1:
         print('Perhitungan alkaline Zinc')
         hasil_zinc = float(input('Masukan Hasil Titrasi EDTA 0.1 M:   '))
@@ -194,6 +202,7 @@ def hasil_perhitungan(codex):
         hasil_degreasing = float(input('Masukan Hasil Titrasi HCl 1 N:   '))
         degreas = Rumus(hasil_degreasing)
         degreas.degreasing()
+    # menampilkan data yang tersimpan di dictionary "hasil_pengecekan_sort"
     elif codex == 17:
         space = ''
         for i in hasil_pengecekan_sort:
@@ -296,7 +305,19 @@ def hasil_perhitungan(codex):
             print(space.center(85, '-'))
     elif codex == 18:
         print(bcolors.OKGREEN, table_factor, bcolors.ENDC, '\n')
-    # looping jika code yang di input bukan integer
+    while code == 19:
+        print('''
+Code  Reagent
+1.    Hcl 1 N
+2.    NaOH 1 N
+3.    Na2SO3 0.1 N
+4.    EDTA 0.1M
+5.    AgNo3 0.1N
+6.    selesai
+            ''')
+        rubah_factor()
+    # looping Menu
+    #input()
     while True:
         try:
             code = int(input('\nperhitungan selanjutnya \nMasukan code perhitungan:  '))
@@ -305,6 +326,7 @@ def hasil_perhitungan(codex):
         except:
             pass
         print('\nCode Salah, Masukan Code Yang Valid')
+# fungsi untuk merubah factor perkalian
 def rubah_factor():
     global code
     while True:
@@ -317,48 +339,38 @@ def rubah_factor():
         print('\nCode Salah, Masukan Code Yang Valid')
     if code_factor == 1:
         factor_baru = float(input('Masukan Factor Hcl 1N yang baru:  '))
-        factor["Factor"][0] = factor_baru
+        table_factor.at[0,"Factor"] = factor_baru
     elif code_factor == 2:
         factor_baru = float(input('Masukan Factor NaOH 1N yang baru:  '))
-        factor["Factor"][1] = factor_baru
+        table_factor.at[1, "Factor"] = factor_baru
     elif code_factor == 3:
         factor_baru = float(input('Masukan Factor Na2SO3 0.1 N yang baru:  '))
-        factor["Factor"][2] = factor_baru
+        table_factor.at[2, "Factor"] = factor_baru
     elif code_factor == 4:
         factor_baru = float(input('Masukan Factor EDTA 0.1M yang baru:  '))
-        factor["Factor"][3] = factor_baru
+        table_factor.at[3, "Factor"] = factor_baru
     elif code_factor == 5:
         factor_baru = float(input('Masukan Factor AgNo3 0.1N yang baru:  '))
-        factor["Factor"][4] = factor_baru
+        table_factor.at[4, "Factor"] = factor_baru
     elif code_factor == 6:
-        print(bcolors.OKGREEN, table_factor, bcolors.ENDC, '\n')
-    elif code_factor == 7:
+        save_data()
+        load_data()
         code = int(input('Masukan Code Perhitungan:  '))
         hasil_perhitungan(code)
-    # dump hasil perubahan dictionary ke dalam file json
-    with open('reagent factor.json', 'w') as f:
-        json.dump(factor, f)
 
-while True:
+
+menu()
+# dump hasil perubahan dictionary ke dalam file json
+while True :
     try:
-        code = int(input())
+        code = int(input('Masukan code perhitungan:  '))
         if isinstance(code, int):
             break
     except:
         pass
     print('\nCode Salah, Masukan Code Yang Valid')
+# untuk menjalankan fungsi perhitungan
 
-while code > 0 and code <= 18:
+while code > 0 and code <= 19:
     hasil_perhitungan(code)
-while code == 19:
-    print('''
-Code  Reagent
-1.    Hcl 1 N
-2.    NaOH 1 N
-3.    Na2SO3 0.1 N
-4.    EDTA 0.1M
-5.    AgNo3 0.1N
-6.    print factor reagent
-7.    selesai
-        ''')
-    rubah_factor()
+
