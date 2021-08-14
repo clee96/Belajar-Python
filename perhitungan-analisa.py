@@ -357,8 +357,6 @@ def rubah_factor():
         load_data()
         code = int(input('Masukan Code Perhitungan:  '))
         hasil_perhitungan(code)
-
-
 menu()
 # dump hasil perubahan dictionary ke dalam file json
 while True :
