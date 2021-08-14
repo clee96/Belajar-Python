@@ -6,7 +6,7 @@
 #HINT 2: https://www.kite.com/python/answers/how-to-limit-a-float-to-two-decimal-places-in-python
 print("Welcome Tip Calculator")
 bill = int(input("Your Bill is $ ..."))
-tip = int(input("How much you want to give us a tip? (%)..."))
+tip = float(input("How much you want to give us a tip? (%)..."))
 split = int(input(
     '''Do you want to split your bill?
     Enter 1 for yes
@@ -15,9 +15,9 @@ split = int(input(
 def main(choice):
     if choice == 2:
         total = bill + bill*(tip/100)
-        print("you should pay $ ", total)
+        print("you should pay $ ", str(round(total, 2)))
     else:
         pic = int(input("Enter number of person.."))
         total = (bill + bill*(tip/100))/pic
-        print("Each person should pay $ ", total)
+        print("Each person should pay $ ", str(round(total, 2)))
 main(split)
