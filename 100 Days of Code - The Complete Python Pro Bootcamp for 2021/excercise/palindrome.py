@@ -1,3 +1,5 @@
+import unittest
+
 def palindrome(text):
     test = []
     result = []
@@ -10,4 +12,15 @@ def palindrome(text):
             return True
         else:
             return False
-print(palindrome("kodok"))
+
+#print(palindrome("kodok"))
+class TestCuboid(unittest.TestCase):
+    def test_volume(self):
+        self.assertEqual(palindrome("budi"), False)
+        self.assertEqual(palindrome("kodok"), True)
+        self.assertEqual(palindrome("baso"), False)
+        self.assertEqual(palindrome("ada"), True)
+
+
+if __name__ == '__main__':
+    unittest.main()
